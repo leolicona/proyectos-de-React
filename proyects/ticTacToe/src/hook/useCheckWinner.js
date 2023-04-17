@@ -7,6 +7,10 @@ const useCheckWinner = ( ) => {
     const clgStyle = "color: green; font-size: 18px"
     const [winner, setWinner] = useState(null)
 
+    const resetWinner = () => {
+        setWinner(null)
+    }
+
     const endGame = (boardToCheck) => {
         const board = boardToCheck.every((square) => square !== null)
         return board
@@ -17,12 +21,13 @@ const useCheckWinner = ( ) => {
         CASES.forEach((caseWinner) => {
             const [a, b, c] = caseWinner;
             if (
-                //boardToCheck[a] !== null &&
+                boardToCheck[a] !== null &&
                 boardToCheck[a] && 
                 boardToCheck[a] === boardToCheck[b] && 
                 boardToCheck[a] === boardToCheck[c]) {
                 setWinner(boardToCheck[a])
             }  else if(endGame(boardToCheck)) {
+                console.log("%c endGame", clgStyle)
                 setWinner(false)
             }
         }) 
@@ -42,7 +47,7 @@ const useCheckWinner = ( ) => {
        
     }
 
-    return [winner, checkWinner]
+    return [winner, checkWinner, resetWinner]
 }
 
 export default useCheckWinner
