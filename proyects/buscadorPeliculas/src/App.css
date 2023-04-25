@@ -1,0 +1,38 @@
+ .header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 48px;
+}
+
+.header-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+} 
+
+.header-form > input {
+  display: flex;
+  flex-grow: 1;
+}
+
+.header-form > button {
+  width: 70px;
+  font-size: 24px;
+  display: flex;
+  place-content: center;
+  flex-grow: 0;
+}
+
+.main {
+    margin-top: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    width: 100%;
+    gap: 32px;
+}
+
+.main > h2 {
+  font-size: 12px;
+}
