@@ -1,16 +1,25 @@
 import { useState, useEffect } from "react";
 
-function useGetData (url) {
+function useGetData ({url, callback}) {
+    
     const [data, setData] = useState([])
     const [ error, setError] = useState(null)
     const [loading, setLoading] = useState(null)
 
+
     useEffect(() => {
+        
         setLoading(true)
-        console.log("Fetching data",  url)
         fetch(url)
         .then(response => response.json())
         .then(data => {
+            // TODO: hacer callback del adapter
+            /* if (callback) { 
+                console.log("In callback")
+                const dataAdapter = callback(data) 
+                console.log("Data adapter")
+                setData(dataAdapter) 
+             } */ 
             setData(data)
         })
         .catch(error => setError({error: error.message}))

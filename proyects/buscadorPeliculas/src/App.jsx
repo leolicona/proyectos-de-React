@@ -1,35 +1,35 @@
-import { useState } from 'react'
+import { useEffect, useState, useRef} from 'react'
 import { movieSearchResults } from './mocks/movieSearchResults'
 import './App.css'
 
+//Components 
+import MovieCard from './components/movieCard/MovieCard'
+
 //Custom Hooks
 import useGetData from './hooks/useGetData'
+
+//Data
+import { moviesAdapter } from './adapters/moviesAdapter'
+
+
 
 function App() {
   const clgStyles = 'color: #00b709; font-size: 1rem;'
   const API_KEY = 'e5600476'
   
-  const [search, setSearch] = useState(' ')
+  
+  const [search, setSearch] = useState('star wars')
+  const [searchError, setSearchError] = useState(null)
   const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${search}`
+  const [loading, data, error] = useGetData({url, callback: (data) => moviesAdapter(data) })
+  console.log("loading", loading, "error:", error)
   
-  const [loading, data, error] = useGetData(url)
-  console.log( data)
-  
-  
-  const { Search } = movieSearchResults
-  
+  const isFirstInput = useRef(true)
   // Adapter
-
-  const movies = Search.map(movie => {
-    const { Title, Year, imdbID, Type, Poster } = movie
-    return {
-      title: Title,
-      year: Year,
-      id: imdbID,
-      type: Type,
-      imagen: Poster
-    }
-  })
+  
+  const movies = moviesAdapter( data.Search )
+  //console.log("Movies", movies)
+  
 
   // get input search value with JavaScript
 
@@ -40,34 +40,67 @@ function App() {
     setSearch(search)
   }
 
+  const handleChange = (e) => {
+    const newQuery = e.target.value;
+    setSearch(newQuery)
+  }
 
+  useEffect(()=> {
+    if(isFirstInput.current){
+      isFirstInput.current = search === '';
+    }
 
-  
+    if (search === "") { 
+      setSearchError('No se puede buscar una película vacía')
+      return
+    }
+
+    if (search.match(/^\d+$/)) { 
+      setSearchError('No se puede buscar una película con un número')
+      return
+    }
+
+    if (search.length < 3) {
+      setSearchError('La búsqueda debe tener al menos 3 caracteres')
+      return
+    }
+  }, [search])
+
 
   return (
     <>
       <header className='header'>
         <form className='header-form' onSubmit={handleSumit}>
-          <input name="search" type="text" placeholder="star wars" />
+          <input name="search" type="text" placeholder="star wars" onChange={handleChange}/>
           <button type="submit">🔎</button>
         </form>
+        {loading &&
+          <p>Loading...</p>
+        }
       </header> 
       
       <main className='main'>
-
-        { 
+        {searchError &&
+          <p style={{color: "red"}}>{searchError}</p>
+        }
+       
+        { data?.Search &&
           movies.map (movie => {
-            const { title, year, id, type, imagen } = movie
+            const { title, year, id, imagen } = movie
             return (
-              <article key={id}>
-                <img src={imagen } alt="" />
-                <h2>{title}</h2>
-                <p>{year}</p>
-              </article>
-              
+              <MovieCard 
+                key={id}
+                id={id}
+                title={title}
+                year={year}
+                imagen={imagen}
+                />
             )
           }) 
         }  
+        { error && 
+          <p>Ocurrio un error, intenta mas tarde</p>
+        }
       </main>
     </>
   )
