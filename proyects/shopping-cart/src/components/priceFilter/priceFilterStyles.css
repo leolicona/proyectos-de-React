@@ -1,0 +1,7 @@
+
+.input-price {
+    width: 100%;
+    max-width: 170px;
+    min-width: 60px;
+    flex-shrink: 2;
+}

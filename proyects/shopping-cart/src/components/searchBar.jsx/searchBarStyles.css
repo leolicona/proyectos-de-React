@@ -1,0 +1,7 @@
+
+.search-bar {
+    width: 100%;
+    max-width: 500px;
+    min-width: 220px;
+    flex-shrink: 2;
+}
