@@ -7,6 +7,10 @@ import MovieCard from './components/movieCard/MovieCard'
 
 //Custom Hooks
 import useGetData from './hooks/useGetData'
+import useInputValidate from './hooks/useInputValidate'
+import useFilterData from './hooks/useFilterData'
+
+
 
 //Data
 import { moviesAdapter } from './adapters/moviesAdapter'
@@ -16,62 +20,55 @@ import { moviesAdapter } from './adapters/moviesAdapter'
 function App() {
   const clgStyles = 'color: #00b709; font-size: 1rem;'
   const API_KEY = 'e5600476'
+
+  //data incial
+  const firtsURL = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${'star wars'}`
+
+  const getURL = (request) => {
+    return `https://www.omdbapi.com/?apikey=${API_KEY}&s=${request}`
+  }
   
+
+  const [search, setSearch] = useState('')  
+  const [sort, setSort] = useState(false)
+  const [searchError] = useInputValidate({search})
+
+  const [url, setUrl] = useState(firtsURL)
+
+  const [loading, data, error] = useGetData({url,  callback: moviesAdapter})
+  console.log("Data", url, data)
   
-  const [search, setSearch] = useState('star wars')
-  const [searchError, setSearchError] = useState(null)
-  const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${search}`
-  const [loading, data, error] = useGetData({url, callback: (data) => moviesAdapter(data) })
-  console.log("loading", loading, "error:", error)
-  
-  const isFirstInput = useRef(true)
   // Adapter
-  
   const movies = moviesAdapter( data.Search )
   //console.log("Movies", movies)
-  
+  const [filterMovies ] = useFilterData(movies, sort)
 
   // get input search value with JavaScript
-
   const handleSumit = (event) => {
     event.preventDefault()
-    const formData = new window.FormData(event.target)
-    const search = formData.get('search')
-    setSearch(search)
+    //const formData = new window.FormData(event.target)
+    //const searchL = formData.get('search')
+    //setSearch(searchL)
+    setUrl(getURL(search))
   }
 
   const handleChange = (e) => {
     const newQuery = e.target.value;
+    if (newQuery.startsWith(' ')) return
     setSearch(newQuery)
   }
 
-  useEffect(()=> {
-    if(isFirstInput.current){
-      isFirstInput.current = search === '';
-    }
-
-    if (search === "") { 
-      setSearchError('No se puede buscar una película vacía')
-      return
-    }
-
-    if (search.match(/^\d+$/)) { 
-      setSearchError('No se puede buscar una película con un número')
-      return
-    }
-
-    if (search.length < 3) {
-      setSearchError('La búsqueda debe tener al menos 3 caracteres')
-      return
-    }
-  }, [search])
+  const handleSort = (e) => {
+    setSort(!sort)
+  }
 
 
   return (
     <>
       <header className='header'>
         <form className='header-form' onSubmit={handleSumit}>
-          <input name="search" type="text" placeholder="star wars" onChange={handleChange}/>
+          <input name="search" type="text" placeholder="star wars" value={search} onChange={handleChange}/>
+          <input className='input-sort' type="checkbox"  checked={sort} onChange={handleSort} />
           <button type="submit">🔎</button>
         </form>
         {loading &&
@@ -85,7 +82,7 @@ function App() {
         }
        
         { data?.Search &&
-          movies.map (movie => {
+          filterMovies.map (movie => {
             const { title, year, id, imagen } = movie
             return (
               <MovieCard 
