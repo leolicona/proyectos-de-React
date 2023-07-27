@@ -1,10 +1,12 @@
+import {useId} from 'react'
 import './priceFilterStyles.css'
 
-function PriceFilter ({value, setValue}) {
+function PriceFilter ({value, setPriceFilter}) {
+    const inputId = useId()
     return (  
-        <input className="input-price" type="text" id="price" placeholder="Precio minimo"
+        <input className="input-price" type="text" id={inputId} placeholder="Precio minimo"
             value={value}
-            onChange={setValue}
+            onChange={(e) => setPriceFilter(e)}
         /> 
     )
 }

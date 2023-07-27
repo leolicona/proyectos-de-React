@@ -1,32 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 import ProductCard from './components/productCard/ProductCard'
 import SearchBar from './components/searchBar.jsx/SearchBar'
 import PriceFilter from './components/priceFilter/PriceFilter'
+
+import { FilterContext } from './context/Filters.jsx'
+
+
+
+import useFilter from './hooks/useFilter'
 const API = 'https://fakestoreapi.com/products'
 import './app.css'
 
 
 function App() {
-
+ 
+  //const filters = useContext(FilterContext);
+  //console.log(filters);
   const [ products, setProducts ] = useState([]);
-  const [filter, setFilter] = useState({
-    search: '',
-    price: 0,
-  })
-
-  const filterProducts = (products) => {
-    return products.filter((product) => {
-      return product.category.toLowerCase().includes(filter.search) || product.title.toLowerCase().includes(filter.search)
-      //( product.category !== 'all' || product.category === filter.category) 
-      && product.price >= filter.price
-    })}
-
+  const [ filter, setFilter, filterProducts ] = useFilter(products)
+ 
 
   const updateCategory = (e) => {
     setFilter({
       ...filter,
-      category: e.target.value,
+      search: e.target.value,
     })
   }
 
@@ -49,12 +47,12 @@ function App() {
       <h1>The Fake Store </h1>
       <section className='filter-section'>
         <SearchBar
-          value={filter.category}
+          value={filter.search}
           setSearch={updateCategory}
         />
         <PriceFilter
           value={filter.price}
-          setValue={updatePrice}
+          setPriceFilter={updatePrice}
         />
       </section>
      
