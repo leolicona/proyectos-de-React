@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./searchBarStyles.css"
 
-function SearchBar ({value, setSearch}) {
+function SearchBar ({value, name, setSearch}) {
     return (
-        <input className="search-bar" type="text" value={value} placeholder="Buscar" 
+        <input name={name} className="search-bar" type="text" value={value} placeholder="Buscar" 
             onChange={(e) =>  setSearch (e)} 
         /> 
     )

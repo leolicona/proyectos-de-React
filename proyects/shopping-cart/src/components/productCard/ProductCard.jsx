@@ -3,21 +3,15 @@ import React from 'react'
 import './productCardStyles.css'
 
 
-export default function ProductCard (products) {
-    console.log(products)
+export default function ProductCard ({products}) {
     return (
-        <>
-            {
-                products.products.map(product => (
-                    <div className="container" key={product.id}>
-                        <h3>{product.title}</h3>
-                        <span className='category'>{product.category}</span>
-                        <img src={product.image} alt={product.title} />
-                        <p> ${product.price}</p>
-                        <button className='addcard-button'>Add to Cart</button>
-                    </div>))
-            }
-        </>
-            
-        )
+        <div className="container" key={products.id}>
+            <h3>{products.title}</h3>
+            <span className='category'>{products.category}</span>
+            <img src={products.image} alt={products.title} />
+            <p> ${products.price}</p>
+            <button className='addcard-button'>Add to Cart</button>
+        </div>
+    )
+        
 }

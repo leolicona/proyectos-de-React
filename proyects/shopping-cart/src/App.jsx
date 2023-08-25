@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 
-import ProductCard from './components/productCard/ProductCard'
+import Products from './components/productCard/ProductCard'
 import SearchBar from './components/searchBar.jsx/SearchBar'
 import PriceFilter from './components/priceFilter/PriceFilter'
 
 import { FilterContext } from './context/Filters.jsx'
-
-
 
 import useFilter from './hooks/useFilter'
 const API = 'https://fakestoreapi.com/products'
@@ -21,17 +19,17 @@ function App() {
   const [ filter, setFilter, filterProducts ] = useFilter(products)
  
 
-  const updateCategory = (e) => {
+  /* const updateCategory = (e) => {
     setFilter({
       ...filter,
-      search: e.target.value,
+      [e.target.name]: e.target.value,
     })
-  }
+  } */
 
-  const updatePrice = (e) => {
+  const updateFilter = (e) => {
     setFilter({
       ...filter,
-      price: e.target.value,
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -47,19 +45,23 @@ function App() {
       <h1>The Fake Store </h1>
       <section className='filter-section'>
         <SearchBar
+          name={'search'}
           value={filter.search}
-          setSearch={updateCategory}
+          setSearch={updateFilter}
         />
         <PriceFilter
+          name={'price'}
           value={filter.price}
-          setPriceFilter={updatePrice}
+          setPriceFilter={updateFilter}
         />
       </section>
      
       <section className='products-container'>
-        <ProductCard
-          products={filterProducts(products)}
-        />
+        {
+         filterProducts(products).map((product) => 
+            <Products  key={product.id} products={product} />)
+
+        }
       </section>
     </section>
   )
