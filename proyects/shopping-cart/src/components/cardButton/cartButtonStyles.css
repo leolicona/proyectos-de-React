@@ -1,0 +1,28 @@
+.cart_button{
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    opacity: .3;
+    border-radius: 50%;
+    
+}
+
+
+
+.cart_button:hover{
+    background-color: blue;
+
+}
+
+.active {
+    background-color: blue;
+}
+
+    .cart_button > img {
+        width: 50%;
+        height: 50%;
+        object-fit: contain;
+    }

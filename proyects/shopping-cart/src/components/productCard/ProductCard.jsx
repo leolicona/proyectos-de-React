@@ -2,16 +2,28 @@
 import React from 'react'
 import './productCardStyles.css'
 
+import { useCart } from '../../hooks/useCart'
+export default function ProductCard ({product}) {
+    const { id, title, price, image, category } = product;
+    const { cart, addCart, removeCart, clearCart } = useCart();
+    const isProductIncart = cart.find((item) => item.id === id);
+    
+    
 
-export default function ProductCard ({products}) {
     return (
-        <div className="container" key={products.id}>
-            <h3>{products.title}</h3>
-            <span className='category'>{products.category}</span>
-            <img src={products.image} alt={products.title} />
-            <p> ${products.price}</p>
-            <button className='addcard-button'>Add to Cart</button>
+        <div className="container" key={id}>
+            <h3>{title}</h3>
+            {category && <span className='category'>{category}</span>}
+            <img src={image} alt={title} />
+            <p className='price'> ${price}</p>
+            <button className={`addcard-button ${ isProductIncart ? 'removeFromCart': ''}`}
+                onClick={ isProductIncart ? () => removeCart(product) : () => addCart(product)}
+            >
+                {isProductIncart ? 'Remove from cart' : 'Add to cart'}
+            </button>
         </div>
     )
         
 }
+
+
