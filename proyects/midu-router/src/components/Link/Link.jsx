@@ -1,12 +1,11 @@
 import { EVENTS } from "../../const/events"
 
-
 const navigate = (url) => {
     window.history.pushState({}, '', url)
     const navigationEvent = new Event (EVENTS.PUSHSTATE)
     window.dispatchEvent(navigationEvent)
   }
-export default function Link({target, to, children, ...props}) {
+export default function Link({target, to, ...props}) {
 
     const handleClick = (e) => {
 
@@ -22,7 +21,7 @@ export default function Link({target, to, children, ...props}) {
     }
 
     return (
-        <a onClick={handleClick} href="#">{children}</a>
+        <a onClick={handleClick} href="#">{props.children}</a>
     )
 
 }
